@@ -1,14 +1,15 @@
 # Teacher_App
-Simple CRUD App in GoLang.
+Simple CRUD App created in GoLang.
 
 Used frameworks in this app: GIN, GORM.
 
-## Install packages:
+## Install dependencies packages:
 ### GIN 
 go get -u github.com/gin-gonic/gin
 ### GORM
 go get -u gorm.io/gorm
 
 ## Database - SQLITE
-file students.db
+students.db - basics CRUD Operations - CREATE, READ, UPDATE, DELETE
+
 
