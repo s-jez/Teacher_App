@@ -6,14 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// func SetupRouters() { // Słaba nazwa
-func CreateUrlMappings() *gin.Engine { // Zwracamy gin.Engine
+func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
 	r.LoadHTMLGlob("assets/*")
+
 	r.GET("/", controllers.Page)
 	r.POST("/student", controllers.CreateStudent)
-	// Jest to funkcja, którą będziemy używać w main dlatego zwracamy router
+	r.GET("/student", controllers.ReadStudents)
+	r.DELETE("/student/:id", controllers.DeleteStudent)
+	r.PUT("/student/:id", controllers.UpdateStudent)
+
 	return r
 }
-
-// Page powinien być w controllersach
