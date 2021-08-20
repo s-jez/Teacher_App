@@ -1,17 +1,19 @@
 package routers
 
 import (
-	"net/http"
+	"Stachowsky/Teacher_App/controllers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouters() {
+// func SetupRouters() { // Słaba nazwa
+func CreateUrlMappings() *gin.Engine { // Zwracamy gin.Engine
 	r := gin.Default()
 	r.LoadHTMLGlob("assets/*")
-	r.GET("/", Page)
-	r.Run()
+	r.GET("/", controllers.Page)
+	r.POST("/student", controllers.CreateStudent)
+	// Jest to funkcja, którą będziemy używać w main dlatego zwracamy router
+	return r
 }
-func Page(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Teacher app in GO!", "message": "Welcome to the Teacher app!"})
-}
+
+// Page powinien być w controllersach
