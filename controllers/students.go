@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"Stachowsky/Teacher_App/config"
 	"Stachowsky/Teacher_App/models"
 	"net/http"
 
@@ -13,53 +12,61 @@ func CreateStudent(c *gin.Context) {
 	err := c.BindJSON(&student)
 	if err != nil {
 		c.JSON(400, err.Error())
+	}
+	if err := models.AddStudent(&student); err != nil {
+		c.JSON(500, err.Error())
 		return
 	}
-	config.DB.Create(&student)
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Successful, student has been created!",
+		"message": "Student has been created!",
 		"data":    student,
 	})
 }
 func ReadStudents(c *gin.Context) {
 	var students []models.Student
-	config.DB.Find(&students)
+	if err := models.ReadStudents(&students); err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Successful, all students has been read!",
+		"message": "Student has been read!",
 		"data":    students,
 	})
 }
-func DeleteStudent(c *gin.Context) {
+func ReadStudentById(c *gin.Context) {
 	var student models.Student
-	err := c.BindJSON(&student)
-	if err != nil {
-		c.JSON(400, err.Error())
+	var id = c.Param("id")
+	if err := models.ReadStudentById(&student, id); err != nil {
+		c.JSON(500, err.Error())
 		return
 	}
-	if err := config.DB.Where("id = ?", c.Param("id")).Find(&student).Error; err != nil {
-		c.JSON(400, err.Error())
-		return
-	}
-	config.DB.Delete(&student)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Successful, student has been deleted!",
+		"message": "Student has been read!",
 		"data":    student,
 	})
 }
-func UpdateStudent(c *gin.Context) {
+func DeleteStudentById(c *gin.Context) {
 	var student models.Student
-	err := c.BindJSON(&student)
-	if err != nil {
-		c.JSON(400, err.Error())
+	var id = c.Param("id")
+	if err := models.DeleteStudentById(&student, id); err != nil {
+		c.JSON(500, err.Error())
 		return
 	}
-	if err := config.DB.Where("id = ?", c.Param("id")).Find(&student).Error; err != nil {
-		c.JSON(400, err.Error())
-		return
-	}
-	config.DB.Save(&student)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Successful, student has been updated!",
+		"message": "Student has been deleted!",
 		"data":    student,
 	})
+}
+func UpdateStudentById(c *gin.Context) {
+	var student models.Student
+	var id = c.Param("id")
+	if err := models.UpdateStudentById(&student, id); err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Student has been updated!",
+		"data":    student,
+	})
+
 }
