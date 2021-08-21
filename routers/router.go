@@ -3,11 +3,13 @@ package routers
 import (
 	"Stachowsky/Teacher_App/controllers"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
+	r.Use(static.Serve("/assets", static.LocalFile("/assets", false)))
 	r.LoadHTMLGlob("assets/*")
 
 	r.GET("/", controllers.Page)

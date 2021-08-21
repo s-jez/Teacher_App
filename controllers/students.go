@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func CreateStudent(c *gin.Context) {
@@ -58,7 +57,7 @@ func UpdateStudent(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
-	config.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(&student)
+	config.DB.Save(&student)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Successful, student has been updated!",
 		"data":    student,
