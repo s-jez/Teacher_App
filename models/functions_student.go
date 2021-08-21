@@ -17,19 +17,19 @@ func ReadStudents(Students *[]Student) error {
 	return nil
 }
 func ReadStudentById(Student *Student, ID string) error {
-	if err := config.DB.Where("ID = ?", ID).First(&Student).Find(&Student).Error; err != nil {
+	if err := config.DB.First(&Student, ID).Find(&Student).Error; err != nil {
 		return err
 	}
 	return nil
 }
 func UpdateStudentById(Student *Student, ID string) error {
-	if err := config.DB.Where("ID = ?", ID).Updates(&Student).Save(&Student).Error; err != nil {
+	if err := config.DB.First(&Student, ID).Save(&Student).Error; err != nil {
 		return err
 	}
 	return nil
 }
 func DeleteStudentById(Student *Student, ID string) error {
-	if err := config.DB.Where("ID = ?", ID).First(&Student).Delete(&Student).Error; err != nil {
+	if err := config.DB.First(&Student, ID).Delete(&Student).Error; err != nil {
 		return err
 	}
 	return nil

@@ -3,13 +3,14 @@ package routers
 import (
 	"Stachowsky/Teacher_App/controllers"
 
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
-	r.LoadHTMLGlob("assets/*")
-	r.Static("/css", "../assets/css")
+	r.LoadHTMLGlob("assets/*.html")
+	r.Use(static.Serve("/assets", static.LocalFile("./assets/", true)))
 
 	r.GET("/", controllers.Page)
 	r.POST("/student", controllers.CreateStudent)
@@ -17,9 +18,6 @@ func CreateUrlMappings() *gin.Engine {
 	r.GET("/student/:id", controllers.ReadStudentById)
 	r.PUT("/student/:id", controllers.UpdateStudentById)
 	r.DELETE("/student/:id", controllers.DeleteStudentById)
-	// r.GET("/student", controllers.ReadStudents)
-	// r.DELETE("/student/:id", controllers.DeleteStudent)
-	// r.PUT("/student/:id", controllers.UpdateStudent)
 
 	return r
 }
