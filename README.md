@@ -1,15 +1,14 @@
 # Teacher_App
-Simple CRUD App created in GoLang.
+CRUD App created in GoLang.
 
-`Used frameworks in this app: GIN, GORM.`
+Used frameworks in this app: GIN, GORM.
 
-## Install dependencies packages:
-### GIN 
+## Install dependencies packages
 `go get -u github.com/gin-gonic/gin`
-### GORM
+
 `go get -u gorm.io/gorm`
 
 ## Database - SQLITE
-`students.db - basics CRUD Operations - CREATE, READ, UPDATE, DELETE`
+`CRUD Operations - POST, GET, PUT, DELETE`
 
 
