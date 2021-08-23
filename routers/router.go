@@ -13,6 +13,11 @@ func CreateUrlMappings() *gin.Engine {
 	r.Use(static.Serve("/assets", static.LocalFile("./assets/", true)))
 
 	r.GET("/", controllers.Page)
+	r.GET("/students/create", controllers.FormCreate)
+	r.GET("/students/read", controllers.FormRead)
+	r.GET("/students/update", controllers.FormUpdate)
+	r.GET("/students/delete", controllers.FormRead)
+
 	r.POST("/student", controllers.CreateStudent)
 	r.GET("/student", controllers.ReadStudents)
 	r.GET("/student/:id", controllers.ReadStudentById)
