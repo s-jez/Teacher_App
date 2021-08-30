@@ -24,7 +24,8 @@ func main() {
 	}
 	// Create table in database
 	config.DB.AutoMigrate(models.Student{})
-	// Initialize routers and run server
+	// Initialize routers
 	r := routers.CreateUrlMappings()
+	// Run server on :8080 port
 	r.Run(":8080")
 }

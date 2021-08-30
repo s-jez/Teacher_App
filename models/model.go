@@ -2,10 +2,10 @@ package models
 
 // Student model
 type Student struct {
-	ID        uint   `gorm:"primaryKey" json:"id"`
-	FirstName string `json:"firstname" binding:"required" form:"firstname"`
-	LastName  string `json:"lastname" binding:"required" form:"lastname"`
-	Age       int    `json:"age" binding:"required" form:"age"`
+	ID        uint64 `gorm:"primaryKey" json:"id" form:"id"`
+	FirstName string `json:"firstname" form:"firstname"`
+	LastName  string `json:"lastname" form:"lastname"`
+	Age       int    `json:"age" form:"age"`
 	Grade     int    `json:"grade" form:"grade"`
 }
 

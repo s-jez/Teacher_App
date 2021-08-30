@@ -3,47 +3,49 @@ package controllers
 import (
 	"Stachowsky/Teacher_App/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateStudent(c *gin.Context) {
 	var student models.Student
-
-	err := c.BindJSON(&student)
+	c.Request.ParseForm()
+	err := c.Bind(&student)
 	if err != nil {
 		c.JSON(400, err.Error())
+		return
 	}
+	student.FirstName = c.PostForm("firstname")
+	student.LastName = c.PostForm("lastname")
+	student.Age, _ = strconv.Atoi(c.PostForm("age"))
+	student.Grade, _ = strconv.Atoi(c.PostForm("grade"))
 
 	if err := models.AddStudent(&student); err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
-	// student.FirstName = c.PostForm("FirstName")
-	// student.LastName = c.PostForm("LastName")
-
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "Student has been created!",
-		"data":    student,
-	})
+	c.HTML(http.StatusCreated, "form_data.html", gin.H{"data": student, "message": "Student has been created!"})
 }
 func ReadStudents(c *gin.Context) {
 	var students []models.Student
-
+	err := c.Bind(&students)
+	if err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
 	if err := models.ReadStudents(&students); err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Student has been read!",
-		"data":    students,
-	})
+
+	c.HTML(http.StatusOK, "form_data.html", gin.H{"data": students, "message": "Students has been read!"})
+
 }
 func ReadStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Param("id")
-
-	err := c.BindJSON(&student)
+	err := c.Bind(&student)
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
@@ -56,6 +58,7 @@ func ReadStudentById(c *gin.Context) {
 	if student.ID == 0 {
 		return
 	}
+	// c.String(200, "ID: %d %s %s %d %d", student.ID, student.FirstName, student.LastName, student.Grade, student.Age)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Student has been read!",
 		"data":    student,
@@ -65,16 +68,19 @@ func DeleteStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Param("id")
 
-	err := c.BindJSON(&student)
+	student.ID, _ = strconv.ParseUint(c.Request.FormValue("id"), 2, 10)
+
+	err := c.Bind(&student)
 	if err != nil {
 		c.JSON(400, err.Error())
+		return
 	}
 
 	if err := models.DeleteStudent(&student, id); err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusNoContent, gin.H{
 		"message": "Student has been deleted!",
 		"data":    student,
 	})
@@ -90,9 +96,10 @@ func UpdateStudentById(c *gin.Context) {
 		})
 	}
 	var newStudent models.Student
-	err := c.BindJSON(&newStudent)
+	err := c.Bind(&newStudent)
 	if err != nil {
 		c.JSON(400, err.Error())
+		return
 	}
 	student.FirstName = newStudent.FirstName
 	student.LastName = newStudent.LastName
@@ -104,7 +111,7 @@ func UpdateStudentById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Student has been updated!",
 		"data":    student,
 	})
