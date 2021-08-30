@@ -1,18 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{.title}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,100;1,300&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/dad59d5b01.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin-top: 100px;
+            background: rgb(58, 57, 82);
+            background: linear-gradient(90deg, rgba(58, 57, 82, 1) 0%, rgba(108, 108, 139, 1) 41%, rgba(110, 110, 119, 1) 55%, rgba(98, 98, 110, 1) 68%, rgba(85, 116, 125, 1) 100%);
+            font-family: Roboto;
+        }
+
+        form {
+            background-color: #CACACA;
+            width: 50%;
+            text-align: center;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        }
+
+        div {
+            margin: 5px;
+        }
+
+        input {
+            width: 200px;
+            font-size: 16px;
+            padding: 0.25em 0.5em;
+            border: 2px solid #8b8a8b;
+            border-radius: 4px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 5px;
+            margin: 10px;
+            outline: none;
+        }
+
+        label {
+            font-size: 24px;
+        }
+
+        a {
+            color: purple;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .input-submit {
+            width: 200px;
+            color: white;
+            background-color: teal;
+            margin-bottom: 20px;
+        }
+
+        .input-submit:hover {
+            opacity: 75%;
+        }
+
+        @media only screen and (max-width: 1024px) {
+            form {
+                width: 100%;
+                border-radius: 0px;
+                margin-top: 25px;
+            }
+
+            body {
+                margin: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <form method="POST">
-        <label>FirstName</label><input type="text" name="firstname" value="" placeholder="Enter student first name">
-        <label>LastName</label><input type="text" name="lastname" value="" placeholder="Enter student last name">
-        <input type="submit" value="submit">
+    <form action="/student" method="POST">
+        <h1>{{.message}}</h1>
+        <div>
+            <label>Firstname: </label> <br /> <input type="text" name="firstname" value=""
+                placeholder="Enter student firstname" required>
+        </div>
+        <div>
+            <label>Lastname: </label> <br /> <input type="text" name="lastname" value=""
+                placeholder="Enter student lastname" required>
+        </div>
+        <div>
+            <label>Age: </label> <br /> <input type="number" name="age" value="" placeholder="Enter student age" min="1"
+                max="100" required>
+        </div>
+        <div>
+            <label>Grade: </label> <br /> <input type="number" name="grade" value="" placeholder="Enter student grade"
+                min="1" max="6" required>
+        </div>
+        <input class="input-submit" type="submit" value="Send!"> <br />
+        <a href="/">Go back to Student App</a>
     </form>
 </body>
 
