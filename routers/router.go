@@ -4,6 +4,7 @@ import (
 	"Stachowsky/Teacher_App/controllers"
 
 	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,13 +12,18 @@ func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
 	r.LoadHTMLGlob("assets/*.html")
 	r.Use(static.Serve("/assets", static.LocalFile("./assets/", true)))
-
+	r.Use(sessions.Sessions("session", sessions.NewCookieStore([]byte("secretkey"))))
+	app := r.Group("/students")
+	{
+		app.GET("/create", controllers.FormCreate)
+		app.POST("/login", controllers.Login)
+		app.GET("/logout", controllers.Logout)
+		app.GET("/account", controllers.Account)
+		app.GET("/status", controllers.Status)
+		// app.GET("/update", controllers.FormUpdate)
+		// app.GET("/delete", controllers.FormDelete)
+	}
 	r.GET("/", controllers.Page)
-	r.GET("/students/create", controllers.FormCreate)
-	r.GET("/students/read", controllers.FormRead)
-	r.GET("/students/update", controllers.FormUpdate)
-	r.GET("/students/delete", controllers.FormDelete)
-
 	r.POST("/student", controllers.CreateStudent)
 	r.GET("/student", controllers.ReadStudents)
 	r.GET("/student/:id", controllers.ReadStudentById)
