@@ -28,5 +28,4 @@ func main() {
 	r := routers.CreateUrlMappings()
 	// Run server
 	r.Run(":8080")
-
 }
