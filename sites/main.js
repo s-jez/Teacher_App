@@ -26,13 +26,17 @@ function show(data) {
     }
     document.querySelector('.first').innerHTML = tab;
 }
-//POST data
+//POST data example by JSON data
 fetch('/student', {
     method: 'POST',
     headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-type': 'application/json'
     },
-    body: JSON.stringify({firstname: "Adam", lastname: "Nowak", age: 24, grade: 5})
+    body: JSON.stringify({firstname: "Jan", lastname: "Kowalski", age: 24, grade: 5})
 }).then(res => res.json())
 .then(res => console.log(res))
+//UPDATE
+
+
+//DELETE
