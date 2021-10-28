@@ -17,7 +17,7 @@ func CreateStudent(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(201, gin.H{"data": student, "msg": "Student has been created!"})
+	c.JSON(201, student)
 }
 func ReadStudents(c *gin.Context) {
 	var students []models.Student
@@ -30,7 +30,7 @@ func ReadStudents(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(200, gin.H{"data": students, "msg": "Students has been read!"})
+	c.JSON(200, students)
 }
 func ReadStudentById(c *gin.Context) {
 	var student models.Student
@@ -47,7 +47,7 @@ func ReadStudentById(c *gin.Context) {
 	if student.ID == 0 {
 		c.JSON(404, gin.H{"msg": "Student not found!"})
 	}
-	c.JSON(200, gin.H{"data": student, "msg": "Student has been read by id!"})
+	c.JSON(200, student)
 }
 func UpdateStudentById(c *gin.Context) {
 	var student models.Student
@@ -70,7 +70,7 @@ func UpdateStudentById(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(201, gin.H{"data": student, "msg": "Student has been updated!"})
+	c.JSON(201, student)
 }
 func DeleteStudentById(c *gin.Context) {
 	var student models.Student
@@ -84,5 +84,5 @@ func DeleteStudentById(c *gin.Context) {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(204, gin.H{"data": student, "msg": "Student has been deleted!"})
+	c.JSON(204, student)
 }
