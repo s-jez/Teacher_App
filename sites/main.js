@@ -1,5 +1,6 @@
 const url_students = "/student";
 
+// GET data
 async function getapi(url)  {
     // store response
     const response = await fetch(url)
@@ -20,8 +21,18 @@ function show(data) {
         <td>${student.age} </td>
         <td>${student.grade} </td>
         <td><button type="button" class="btn btn-outline-primary">Edit</button></td>
-      <td><button type="button" class="btn btn-outline-danger">Delete</button></td>
+      <td><button type="button" id="btn_delete" class="btn btn-outline-danger">Delete</button></td>
         </tr>`;
     }
     document.querySelector('.first').innerHTML = tab;
 }
+//POST data
+fetch('/student', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-type': 'application/json'
+    },
+    body: JSON.stringify({firstname: "Adam", lastname: "Nowak", age: 24, grade: 5})
+}).then(res => res.json())
+.then(res => console.log(res))
