@@ -9,7 +9,7 @@ import (
 
 func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
-	r.LoadHTMLGlob("sites/*.gohtml")
+	r.LoadHTMLGlob("sites/*.html")
 	r.Use(static.Serve("/sites", static.LocalFile("./sites/", true)))
 	r.GET("/", controllers.Page)
 	r.POST("/student", controllers.CreateStudent)

@@ -13,25 +13,25 @@
             <form id="myForm">
               <div class="form-group">
                 <label for="firstname">Firstname</label>
-                <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter firstname">
+                <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter firstname" required min="2" max="12" onfocus="this.value=''" required>
               </div>
               <div class="form-group">
                 <label for="lastname">Lastname</label>
-                <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter lastname">
+                <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter lastname" min="2" max="12" onfocus="this.value=''" required >
               </div>
               <div class="form-group">
                 <label for="age">Age</label>
-                <input type="number" class="form-control" id="age" name="age" placeholder="Enter age" min="1" max="100">
+                <input type="number" class="form-control" id="age" name="age" placeholder="Enter age" min="1" max="100" onfocus="this.value=''" required>
               </div>
               <div class="form-group">
                 <label for="grade">Grade</label>
-                <input type="number" class="form-control" id="grade" name="grade" placeholder="Enter grade" min="1" max="6">
+                <input type="number" class="form-control" id="grade" name="grade" placeholder="Enter grade" min="1" max="6" onfocus="this.value=''" required>
               </div>
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" onClick="start()">Add student</button>
+              <button type="submit" class="btn btn-success" id="btn-submit">Add student</button>
+            </form>
           </div>
-          </form>
           </div>
         </div>
       </div>
