@@ -61,18 +61,13 @@ func UpdateStudentById(c *gin.Context) {
 	if student.ID == 0 {
 		c.JSON(404, gin.H{"msg": "Student not found!"})
 	}
+
 	var nStudent models.Student
 	err := c.Bind(&nStudent)
 	if err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
-	nStudent.ID, _ = strconv.ParseUint(c.Request.FormValue("id"), 10, 64)
-	nStudent.FirstName = c.Request.FormValue("firstname")
-	nStudent.LastName = c.Request.FormValue("lastname")
-	nStudent.Age, _ = strconv.Atoi(c.Request.FormValue("age"))
-	nStudent.Grade, _ = strconv.Atoi(c.Request.FormValue("grade"))
-
 	student.FirstName = nStudent.FirstName
 	student.LastName = nStudent.LastName
 	student.Age = nStudent.Age
@@ -87,7 +82,6 @@ func UpdateStudentById(c *gin.Context) {
 func DeleteStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Param("id")
-	student.ID, _ = strconv.ParseUint(c.Request.FormValue("id"), 10, 64)
 	err := c.Bind(&student)
 	if err != nil {
 		c.JSON(400, err.Error())
