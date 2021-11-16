@@ -17,8 +17,7 @@ func ReadStudents(Students *[]Student) error {
 	return nil
 }
 func ReadStudent(Student *Student, ID string) error {
-	SelectById(Student, ID)
-	if err := config.DB.Find(&Student).Error; err != nil {
+	if err := config.DB.Where("id = ?", ID).Find(&Student).Error; err != nil {
 		return err
 	}
 	return nil
@@ -30,8 +29,7 @@ func UpdateStudent(Student *Student, ID string) error {
 	return nil
 }
 func DeleteStudent(Student *Student, ID string) error {
-	SelectById(Student, ID)
-	if err := config.DB.Delete(&Student).Error; err != nil {
+	if err := config.DB.Where("id = ?", ID).Delete(&Student).Error; err != nil {
 		return err
 	}
 	return nil

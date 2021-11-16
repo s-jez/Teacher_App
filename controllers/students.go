@@ -68,12 +68,18 @@ func UpdateStudentById(c *gin.Context) {
 		c.JSON(400, err.Error())
 		return
 	}
+
 	student.FirstName = nStudent.FirstName
 	student.LastName = nStudent.LastName
 	student.Age = nStudent.Age
 	student.Grade = nStudent.Grade
 
-	if err := models.UpdateStudent(&nStudent, id); err != nil {
+	student.FirstName = c.Request.FormValue("firstname")
+	student.LastName = c.Request.FormValue("lastname")
+	student.Age, _ = strconv.Atoi(c.Request.FormValue("age"))
+	student.Grade, _ = strconv.Atoi(c.Request.FormValue("grade"))
+
+	if err := models.UpdateStudent(&student, id); err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
