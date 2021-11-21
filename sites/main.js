@@ -1,12 +1,8 @@
 const url_students = "/student";
 
-// GET data
 async function getapi(url) {
-  // store response
   const response = await fetch(url)
-  // store data in json
   var data = await response.json();
-  console.log(data);
   show(data);
 }
 getapi(url_students);
@@ -14,7 +10,7 @@ function show(data) {
   let tab = ``;
   for (let student of data) {
     tab += `
-        <tr>
+        <tr data-id='${student.id}'>
         <th scope="row">${student.id}</th>
         <td>${student.firstname} </td>
         <td>${student.lastname} </td>
@@ -33,33 +29,40 @@ function show(data) {
 }
 $(document).on('submit', '#myForm', function (event) {
   event.preventDefault();
-  $('.info').empty();
   var formData = {
     firstname: $("#firstname").val(),
     lastname: $("#lastname").val(),
     age: $("#age").val(),
     grade: $("#grade").val(),
   };
-  $.ajax({
-    type: "POST",
-    url: "/student",
-    data: formData,
-    dataType: "JSON",
-    encode: true,
-  }).done(function (data) {
-    console.log(data);
-    getapi(url_students);
-    $('#exampleModal').hide();
-    $('.close').click();
-    $('.info').addClass("success");
-    $('.info').append('<div class="alert alert-success">Pomyślnie dodałeś studenta!</div>');
-  }).fail(function() {
-    $('.info').append('<div class="alert alert-danger">Błąd z połączeniem z serwerem!!</div>');
-  });
+  if(formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
+      $('.info').empty();
+      $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
+  } else {
+    $.ajax({
+      type: "POST",
+      url: "/student",
+      data: formData,
+      dataType: "JSON",
+      encode: true,
+    }).done(function () {
+      $('.info').empty();
+      getapi(url_students);
+      $('input#firstname').val('');
+      $('input#lastname').val('');
+      $('input#age').val('');
+      $('input#grade').val('');
+      $('#exampleModal').hide();
+      $('.close').click();
+      $('.info').addClass("success");
+      $('.info').append('<div class="alert alert-success">You have succesffully added a student!</div>');
+    }).fail(function() {
+      $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
+    });
+  }
 })
 $(document).on('click', '#btn_delete', function (event) {
   event.preventDefault();
-  $('.info').empty();
   var id = $(this).attr('data-id');
   $(document).on('click', '#delete-modal', function (event) {
     event.preventDefault();
@@ -69,20 +72,19 @@ $(document).on('click', '#btn_delete', function (event) {
       url: "/student/" + id,
       dataType: "JSON",
       encode: true,
-    }).done(function (data) {
-      console.log(data);
+    }).done(function () {
+      $('.info').empty();
       getapi(url_students);
       $('#exampleModal3').hide();
       $('.close').click();
       $('.info').addClass("success");
-      $('.info').append('<div class="alert alert-danger">Pomyślnie usunales studenta!</div>');
-    }).fail(function (data) {
-      $('.info').append('<div class="alert alert-danger">Błąd z połączeniem z serwerem!!</div>');
+      $('.info').append('<div class="alert alert-danger">You have successfully deleted a student!</div>');
+    }).fail(function () {
+      $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
     });
   })
 })
 $(document).on('click', '#btn_update', function (event) {
-  $('.info').empty();
   event.preventDefault();
   var id = $(this).attr('data-id');
   $(document).on('click', '#update-modal', function (event) {
@@ -94,23 +96,32 @@ $(document).on('click', '#btn_update', function (event) {
       "age": $('#myForm2').find('#age').val(),
       "grade": $('#myForm2').find('#grade').val(),
     };
-    $.ajax({
-      type: "PUT",
-      url: "/student/" + id,
-      dataType: "JSON",
-      encode: true,
-      data: formData,
-    }).done(function (data) {
-      console.log(data);
-      getapi(url_students);
-      $('#exampleModal2').hide();
-      $('.close').click();
-      $('.info').addClass("success");
-      $('.info').append('<div class="alert alert-primary">Pomyślnie przebiegła aktualizacja studenta!</div>');
-    }).fail(function () {
-      $('.info').append('<div class="alert alert-danger">Błąd z połączeniem z serwerem!!</div>');
-    }).catch(e => {
-      console.log(e);
-    });
+    if(formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
+      $('.info').empty();
+      $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
+    } else {
+      $.ajax({
+        type: "PUT",
+        url: "/student/" + id,
+        dataType: "JSON",
+        encode: true,
+        data: formData,
+      }).done(function (data) {
+        $('.info').empty();
+        getapi(url_students);
+        $('input#firstname').val('');
+        $('input#lastname').val('');
+        $('input#age').val('');
+        $('input#grade').val('');
+        $('#exampleModal2').hide();
+        $('.close').click();
+        $('.info').addClass("success");
+        $('.info').append('<div class="alert alert-primary">You have successfully updated a student!</div>');
+      }).fail(function () {
+        $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
+      }).catch(e => {
+        console.log(e);
+      });
+    }
   })
 })
