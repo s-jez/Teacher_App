@@ -9,8 +9,8 @@ import (
 
 func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
-	r.LoadHTMLGlob("sites/*.html")
-	r.Use(static.Serve("/sites", static.LocalFile("./sites/", true)))
+	r.LoadHTMLGlob("sites/html/*.html")
+	r.Use(static.Serve("/sites", static.LocalFile("./sites/js", true)))
 	r.GET("/", controllers.Page)
 	r.POST("/student", controllers.CreateStudent)
 	r.GET("/student", controllers.ReadStudents)
@@ -18,7 +18,7 @@ func CreateUrlMappings() *gin.Engine {
 	r.PUT("/student/:id", controllers.UpdateStudentById)
 	r.DELETE("/student/:id", controllers.DeleteStudentById)
 	r.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"data": "Page not found!"})
+		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
 
 	return r
