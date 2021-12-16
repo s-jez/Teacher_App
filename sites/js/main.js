@@ -6,6 +6,7 @@ async function getapi(url) {
   show(data);
 }
 getapi(url_students);
+// Get Students
 function show(data) {
   let tab = ``;
   for (let student of data) {
@@ -27,6 +28,7 @@ function show(data) {
   }
   document.querySelector('.first').innerHTML = tab;
 }
+// Add Student
 $(document).on('submit', '#myForm', function (event) {
   event.preventDefault();
   var formData = {
@@ -35,9 +37,9 @@ $(document).on('submit', '#myForm', function (event) {
     age: $("#age").val(),
     grade: $("#grade").val(),
   };
-  if(formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
-      $('.info').empty();
-      $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
+  if (formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
+    $('.info').empty();
+    $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
   } else {
     $.ajax({
       type: "POST",
@@ -56,11 +58,12 @@ $(document).on('submit', '#myForm', function (event) {
       $('.close').click();
       $('.info').addClass("success");
       $('.info').append('<div class="alert alert-success">You have succesffully added a student!</div>');
-    }).fail(function() {
+    }).fail(function () {
       $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
     });
   }
 })
+// Delete Student
 $(document).on('click', '#btn_delete', function (event) {
   event.preventDefault();
   var id = $(this).attr('data-id');
@@ -84,6 +87,7 @@ $(document).on('click', '#btn_delete', function (event) {
     });
   })
 })
+// Update Student
 $(document).on('click', '#btn_update', function (event) {
   event.preventDefault();
   var id = $(this).attr('data-id');
@@ -91,12 +95,13 @@ $(document).on('click', '#btn_update', function (event) {
     event.preventDefault();
     $('.info').empty();
     var formData = {
-      "firstname": $('#myForm2').find('#firstname').val(),
+      "firstname": $('#myForm2').find('input#firstname.form-control').val(),
       "lastname": $('#myForm2').find('#lastname').val(),
       "age": $('#myForm2').find('#age').val(),
       "grade": $('#myForm2').find('#grade').val(),
     };
-    if(formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
+    firstname.value = $('tbody.first tr').attr('data-id');
+    if (formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
       $('.info').empty();
       $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
     } else {
