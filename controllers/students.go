@@ -9,8 +9,7 @@ import (
 
 func CreateStudent(c *gin.Context) {
 	var student models.Student
-	err := c.Bind(&student)
-	if err != nil {
+	if err := c.Bind(&student); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
@@ -26,8 +25,7 @@ func CreateStudent(c *gin.Context) {
 }
 func ReadStudents(c *gin.Context) {
 	var students []models.Student
-	err := c.Bind(&students)
-	if err != nil {
+	if err := c.Bind(&students); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
@@ -40,8 +38,7 @@ func ReadStudents(c *gin.Context) {
 func ReadStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Param("id")
-	err := c.Bind(&student)
-	if err != nil {
+	if err := c.Bind(&student); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
@@ -56,6 +53,10 @@ func ReadStudentById(c *gin.Context) {
 }
 func UpdateStudentById(c *gin.Context) {
 	var student models.Student
+	if err := c.Bind(&student); err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
 	id := c.Param("id")
 	models.SelectById(&student, id)
 	if student.ID == 0 {
@@ -63,8 +64,7 @@ func UpdateStudentById(c *gin.Context) {
 	}
 
 	var nStudent models.Student
-	err := c.Bind(&nStudent)
-	if err != nil {
+	if err := c.Bind(&nStudent); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
@@ -88,8 +88,7 @@ func UpdateStudentById(c *gin.Context) {
 func DeleteStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Param("id")
-	err := c.Bind(&student)
-	if err != nil {
+	if err := c.Bind(&student); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
