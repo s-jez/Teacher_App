@@ -20,6 +20,6 @@ func CreateUrlMappings() *gin.Engine {
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
-
+	r.POST("/login", controllers.LoginUser)
 	return r
 }
