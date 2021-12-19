@@ -9,26 +9,26 @@ func CreateUser(User *User) error {
 	return nil
 }
 func CheckUserEmail(User *User, Email string) error {
-	if err := config.DB.Table("users").Where("Email = ?", Email).Find(&User).Error; err != nil {
+	if err := config.DB.Table("users").Where("Email = ?", Email).First(&User).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func GetUserRole(User *User, userid uint64) error {
-	if err := config.DB.Table("users").Where("ID = ?", userid).Find(&User.RoleID).Error; err != nil {
-		return err
+func GetUserRole(User *User, userid uint64) *uint64 {
+	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
+		return &User.RoleID
 	}
 	return nil
 }
-func GetUserEmail(User *User, userid uint64) error {
-	if err := config.DB.Table("users").Where("ID = ?", userid).Find(&User.Email).Error; err != nil {
-		return err
+func GetUserEmail(User *User, userid uint64) *string {
+	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
+		return &User.Email
 	}
 	return nil
 }
-func GetUserId(User *User, userid uint64) error {
-	if err := config.DB.Table("users").Where("ID = ?", userid).Find(&User.ID).Error; err != nil {
-		return err
+func GetUserId(User *User, userid uint64) *uint64 {
+	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
+		return &User.ID
 	}
 	return nil
 }
