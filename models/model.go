@@ -15,14 +15,19 @@ type User struct {
 	UserName string `json:"username"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
-	Role     string `json:"role"`
+	RoleID   uint64 `json:"roleid"`
+}
+
+// Tokens model
+type Tokens struct {
+	AccessToken  *Token
+	RefreshToken *Token
 }
 
 // Token model
 type Token struct {
-	Role        string `json:"role`
-	Email       string `json:"email"`
-	TokenString string `json:"token"`
+	Token      string
+	Expiration int64
 }
 
 // Authentication login model
