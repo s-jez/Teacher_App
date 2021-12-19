@@ -21,5 +21,6 @@ func CreateUrlMappings() *gin.Engine {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
 	r.POST("/login", controllers.LoginUser)
+	r.POST("/register", controllers.RegisterUser)
 	return r
 }
