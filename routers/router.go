@@ -12,15 +12,16 @@ func CreateUrlMappings() *gin.Engine {
 	r.LoadHTMLGlob("sites/html/*.html")
 	r.Use(static.Serve("/sites", static.LocalFile("./sites/js", true)))
 	r.GET("/", controllers.Page)
-	r.POST("/student", controllers.CreateStudent)
+	r.POST("/student", controllers.IsAdmin, controllers.CreateStudent)
 	r.GET("/student", controllers.ReadStudents)
 	r.GET("/student/:id", controllers.ReadStudentById)
-	r.PUT("/student/:id", controllers.UpdateStudentById)
-	r.DELETE("/student/:id", controllers.DeleteStudentById)
+	r.PUT("/student/:id", controllers.IsDev, controllers.UpdateStudentById)
+	r.DELETE("/student/:id", controllers.IsAdmin, controllers.DeleteStudentById)
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
 	r.POST("/login", controllers.LoginUser)
 	r.POST("/register", controllers.RegisterUser)
+	r.POST("/refresh", controllers.RefreshToken)
 	return r
 }
