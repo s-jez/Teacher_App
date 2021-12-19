@@ -32,6 +32,7 @@ type Token struct {
 
 // Authentication login model
 type Auth struct {
+	UserName string `json:"username"`
 	Email    string `json:"email`
 	Password string `json:"password"`
 }

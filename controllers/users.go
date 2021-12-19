@@ -17,8 +17,12 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 	var user models.User
+	if err := models.CheckUserName(&user, u.UserName); err != nil {
+		c.JSON(400, "Incorrect username!")
+		return
+	}
 	if err := models.CheckUserEmail(&user, u.Email); err != nil {
-		c.JSON(400, err.Error())
+		c.JSON(400, "Incorrect email!")
 		return
 	}
 	if err := CheckHashPassword(u.Password, user.Password); !err {
@@ -65,9 +69,7 @@ func CreateRefreshToken(userid uint64, role uint64, user models.User) *models.To
 	var token = &models.Token{}
 	token.Expiration = time.Now().Add(time.Hour * 24 * 7).Unix()
 	claims := jwt.MapClaims{}
-	claims["authorized"] = true
 	claims["role"] = models.GetUserRole(&user, userid)
-	claims["email"] = models.GetUserEmail(&user, userid)
 	claims["user_id"] = userid
 	claims["exp"] = token.Expiration
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
