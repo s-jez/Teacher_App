@@ -47,6 +47,9 @@ $(document).on('submit', '#myForm', function (event) {
       data: formData,
       dataType: "JSON",
       encode: true,
+      headers: {
+        "Authorization": "Bearer"
+      }
     }).done(function () {
       $('.info').empty();
       getapi(url_students);
