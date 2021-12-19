@@ -2,10 +2,7 @@ package controllers
 
 import (
 	"Stachowsky/Teacher_App/models"
-	"fmt"
-	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,130 +10,69 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Login
 func LoginUser(c *gin.Context) {
+	var u models.Auth
+	if err := c.ShouldBindJSON(&u); err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	var user models.User
+	if err := models.CheckUserEmail(&user, user.Email); err != nil {
+		c.JSON(400, err.Error())
+		return
+	}
+	// if err := CheckHashPassword(user.Password, u.Password); !err {
+	// 	c.JSON(400, err)
+	// 	return
+	// }
+	tokens := models.Tokens{}
+	tokens.AccessToken = CreateAccessToken(user.ID, user.RoleID, user)
+	tokens.RefreshToken = CreateRefreshToken(user.ID, user.RoleID, user)
+	c.JSON(200, tokens)
+}
+
+func RegisterUser(c *gin.Context) {
 	var u models.User
 	if err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(422, "Invalid json provided")
+		c.JSON(400, err.Error())
 		return
 	}
-	var user = models.User{
-		ID:       1,
-		UserName: "root",
-		Password: "root",
-		Email:    "root",
-		Role: "admin",
-	}
-	if user.UserName != u.UserName || user.Password != u.Password || user.Email != u.Email || user.Role != u.Role {
-		c.JSON(401, "Provide valid login details!")
-	}
-	token, err := CreateAccessToken(user.Email, user.Role)
-	if err != nil {
-		c.JSON(422, err.Error())
+	u.Password, _ = GenerateHashPassword(u.Password)
+	u.RoleID = 1
+	if err := models.CreateUser(&u); err != nil {
+		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(200, token)
+	c.JSON(200, u)
 }
-
-// Register
-func Register(c *gin.Context) {
-
-}
-
-// Create Access Token
-func CreateAccessToken(email string, role string) (*models.Token, error) {
-	var err error
+func CreateAccessToken(userid uint64, role uint64, user models.User) *models.Token {
 	var token = &models.Token{}
+	token.Expiration = time.Now().Add(time.Minute * 15).Unix()
+
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["email"] = email
-	claims["role"] = role
-	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	claims["role"] = models.GetUserRole(&user, userid)
+	claims["email"] = models.GetUserEmail(&user, userid)
+	claims["user_id"] = userid
+	claims["exp"] = token.Expiration
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token.TokenString, err = at.SignedString([]byte(os.Getenv("ACCESS_SECRET_TOKEN")))
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
+	token.Token, _ = at.SignedString([]byte(os.Getenv("ACCESS_SECRET_TOKEN")))
+	return token
 }
 
-// Create Refresh Token
-func CreateRefreshToken(email, role map[string]bool) (*models.Token, error) {
-	var err error
+func CreateRefreshToken(userid uint64, role uint64, user models.User) *models.Token {
 	var token = &models.Token{}
+	token.Expiration = time.Now().Add(time.Hour * 24 * 7).Unix()
 	claims := jwt.MapClaims{}
-	claims["email"] = email
-	claims["role"] = role
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	claims["authorized"] = true
+	claims["role"] = models.GetUserRole(&user, userid)
+	claims["email"] = models.GetUserEmail(&user, userid)
+	claims["user_id"] = userid
+	claims["exp"] = token.Expiration
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token.TokenString, err = rt.SignedString([]byte(os.Getenv("REFRESH_SECRET_TOKEN")))
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
-
+	token.Token, _ = rt.SignedString([]byte(os.Getenv("REFRESH_SECRET_TOKEN")))
+	return token
 }
-
-// Extract Token
-func ExtractToken(r *http.Request) string {
-	bearToken := r.Header.Get("Authorization")
-	strArr := strings.Split(bearToken, " ")
-	if len(strArr) == 2 {
-		return strArr[1]
-	}
-	return ""
-}
-
-// Verify Token
-func VerifyToken(r *http.Request) (*jwt.Token, error) {
-	tokenString := ExtractToken(r)
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		//Make sure that the token method conform to "SigningMethodHMAC"
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
-}
-
-// Token Valid
-func TokenValid(r *http.Request) error {
-	token, err := VerifyToken(r)
-	if err != nil {
-		return err
-	}
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		return err
-	}
-	return nil
-}
-
-// func ExtractTokenMetadata(r *http.Request) (*models.Token, error) {
-// 	token, err := VerifyToken(r)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	claims, ok := token.Claims.(jwt.MapClaims)
-// 	if ok && token.Valid {
-// 		accessUuid, ok := claims["access_uuid"].(string)
-// 		if !ok {
-// 			return nil, err
-// 		}
-// 		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		return &models.Token{
-// 			AccessUuid: accessUuid,
-// 			UserId:     userId,
-// 		}, nil
-// 	}
-// 	return nil, err
-// }
 func GenerateHashPassword(pass string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(pass), 14)
 	return string(bytes), err
