@@ -24,8 +24,8 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	// Create table in database
-	config.DB.AutoMigrate(&models.Student{})
+	// Create tables in database
+	config.DB.AutoMigrate(&models.Student{}, &models.User{})
 	// Initalize routers
 	r := routers.CreateUrlMappings()
 	// Run server
