@@ -17,14 +17,15 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 	var user models.User
-	if err := models.CheckUserEmail(&user, user.Email); err != nil {
+	if err := models.CheckUserEmail(&user, u.Email); err != nil {
 		c.JSON(400, err.Error())
 		return
 	}
-	// if err := CheckHashPassword(user.Password, u.Password); !err {
-	// 	c.JSON(400, err)
-	// 	return
-	// }
+	if err := CheckHashPassword(u.Password, user.Password); !err {
+		c.JSON(400, "Incorrect password!")
+		return
+	}
+
 	tokens := models.Tokens{}
 	tokens.AccessToken = CreateAccessToken(user.ID, user.RoleID, user)
 	tokens.RefreshToken = CreateRefreshToken(user.ID, user.RoleID, user)
