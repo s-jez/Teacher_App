@@ -11,12 +11,17 @@ func CreateUrlMappings() *gin.Engine {
 	r := gin.Default()
 	r.LoadHTMLGlob("sites/html/*.html")
 	r.Use(static.Serve("/sites", static.LocalFile("./sites/js", true)))
+	userRoles := map[string]uint64{
+		"user": 1,
+		"dev": 2,
+		"admin": 3,
+	}
 	r.GET("/", controllers.Page)
-	r.POST("/student", controllers.IsAdmin, controllers.CreateStudent)
 	r.GET("/student", controllers.ReadStudents)
 	r.GET("/student/:id", controllers.ReadStudentById)
-	r.PUT("/student/:id", controllers.IsDev, controllers.UpdateStudentById)
-	r.DELETE("/student/:id", controllers.IsAdmin, controllers.DeleteStudentById)
+	r.POST("/student", controllers.AuthMiddleware([]uint64{userRoles["admin"], userRoles["dev"]}), controllers.CreateStudent)
+	r.PUT("/student/:id", controllers.AuthMiddleware([]uint64{userRoles["admin"], userRoles["dev"]}), controllers.UpdateStudentById)
+	r.DELETE("/student/:id", controllers.AuthMiddleware([]uint64{userRoles["admin"]}), controllers.DeleteStudentById)
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
