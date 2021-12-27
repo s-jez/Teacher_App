@@ -15,7 +15,9 @@ var err error
 
 func main() {
 	// Create database file
-	config.CreateFile()
+	config.CreateDBFile()
+	// Create env file
+	config.CreateEnvFile()
 	// Load .env file
 	config.LoadEnv()
 	// Database connection
