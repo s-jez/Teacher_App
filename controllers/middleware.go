@@ -20,7 +20,11 @@ func AuthMiddleware(isAuthenticatedRole []uint64) gin.HandlerFunc {
 		if err != nil {
 			c.JSON(401, "No access to site!")
 		}
-		claims := token.Claims.(jwt.MapClaims)
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			c.AbortWithStatus(401)
+			return
+		}
 		if len(isAuthenticatedRole) > 0 {
 			RoleID := claims["role_id"].(uint64)
 			for _, v := range isAuthenticatedRole {
