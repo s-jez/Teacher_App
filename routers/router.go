@@ -12,8 +12,8 @@ func CreateUrlMappings() *gin.Engine {
 	r.LoadHTMLGlob("sites/html/*.html")
 	r.Use(static.Serve("/sites", static.LocalFile("./sites/js", true)))
 	userRoles := map[string]uint64{
-		"user": 1,
-		"dev": 2,
+		"user":  1,
+		"dev":   2,
 		"admin": 3,
 	}
 	r.GET("/", controllers.Page)
@@ -21,7 +21,7 @@ func CreateUrlMappings() *gin.Engine {
 	r.GET("/student/:id", controllers.ReadStudentById)
 	r.POST("/student", controllers.AuthMiddleware([]uint64{userRoles["admin"], userRoles["dev"]}), controllers.CreateStudent)
 	r.PUT("/student/:id", controllers.AuthMiddleware([]uint64{userRoles["admin"], userRoles["dev"]}), controllers.UpdateStudentById)
-	r.DELETE("/student/:id", controllers.AuthMiddleware([]uint64{userRoles["admin"]}), controllers.DeleteStudentById)
+	r.DELETE("/student/:id", controllers.AuthMiddleware([]uint64{userRoles["admin"]}))
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
