@@ -1,4 +1,11 @@
 const url_students = "/student";
+const formCreateStudent = document.getElementById('formCreateStudent');
+const formUpdateStudent = document.getElementById('formUpdateStudent');
+const formRegisterUser = document.getElementById('formRegisterUser');
+const formLoginUser = document.getElementById('formLoginUser');
+const btnDelete = document.getElementById('btnDelete');
+const btnUpdate = document.getElementById('btnUpdate');
+let currentID;
 
 async function getapi(url) {
   const response = await fetch(url)
@@ -13,163 +20,260 @@ function show(data) {
     tab += `
         <tr data-id='${student.id}'>
         <th scope="row">${student.id}</th>
-        <td>${student.firstname} </td>
-        <td>${student.lastname} </td>
-        <td>${student.age} </td>
-        <td>${student.grade} </td>
-        <td><button type="button" id="btn_update" class="btn btn-outline-primary" data-id="${student.id}" data-target="#exampleModal2" data-toggle="modal">Edit</button></td>
-        <td><button type="button" id="btn_delete" class="btn btn-outline-danger" data-id="${student.id}" data-target="#exampleModal3" data-toggle="modal">Delete</button></td>
+        <td class="firstname">${student.firstname} </td>
+        <td class="lastname">${student.lastname} </td>
+        <td class="age">${student.age} </td>
+        <td class="grade">${student.grade} </td>
+        <td><button type="button" id="btnUpdate" class="btn btn-outline-primary" data-target="#exampleModal2" data-toggle="modal" onclick="getID(${student.id})">Edit</button></td>
+        <td><button type="button" id="btnDelete" class="btn btn-outline-danger" data-target="#exampleModal3" data-toggle="modal" onclick="getID(${student.id})">Delete</button></td>
         </tr>`;
   }
-  document.querySelector('.first').innerHTML = tab;
+
+  if (tab != null) {
+    document.querySelector('.table__content').innerHTML = tab;
+  }
 }
-// // Add Student
-// $(document).on('submit', '#formCreate', function (event) {
-//   event.preventDefault();
-//   var formData = {
-//     firstname: $("#formRegister__firstname").val(),
-//     lastname: $("#formRegister__lastname").val(),
-//     age: $("#formRegister__age").val(),
-//     grade: $("#formRegister__grade").val(),
-//   };
-//   if (formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
-//     $('.info').empty();
-//     $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
-//   } else {
-//     $.ajax({
-//       type: "POST",
-//       url: "/student",
-//       data: formData,
-//       dataType: "JSON",
-//       encode: true,
-//       headers: {
-//         "Authorization": "Bearer"
-//       }
-//     }).done(function () {
-//       $('.info').empty();
-//       getapi(url_students);
-//       $('input#formRegister__firstname').val('');
-//       $('input#formRegister__lastname').val('');
-//       $('input#formRegister__age').val('');
-//       $('input#formRegister__grade').val('');
-//       $('#exampleModal').hide();
-//       $('.close').click();
-//       $('.info').addClass("success");
-//       $('.info').append('<div class="alert alert-success">You have succesffully added a student!</div>');
-//     }).fail(function () {
-//       $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
-//     }).catch(e => {
-//       console.log(e)
-//     })
-//   }
-// })
-// // Delete Student
-// $(document).on('click', '#btn_delete', function (event) {
-//   event.preventDefault();
-//   var id = $(this).attr('data-id');
-//   $(document).on('click', '#delete-modal', function (event) {
-//     event.preventDefault();
-//     $('.info').empty();
-//     $.ajax({
-//       type: "DELETE",
-//       url: "/student/" + id,
-//       dataType: "JSON",
-//       encode: true,
-//       headers: {
-//         "Authorization": "Bearer"
-//       }
-//     }).done(function () {
-//       $('.info').empty();
-//       getapi(url_students);
-//       $('#exampleModal3').hide();
-//       $('.close').click();
-//       $('.info').addClass("success");
-//       $('.info').append('<div class="alert alert-danger">You have successfully deleted a student!</div>');
-//     }).fail(function () {
-//       $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
-//     }).catch(e => {
-//       console.log(e)
-//     })
-//   })
-// })
-// // Update Student
-// $(document).on('click', '#btn_update', function (event) {
-//   event.preventDefault();
-//   var id = $(this).attr('data-id');
-//   $(document).on('click', '#update-modal', function (event) {
-//     event.preventDefault();
-//     $('.info').empty();
-//     var formData = {
-//       "firstname": $('#myForm2').find('#formUpdate__firstname').val(),
-//       "lastname": $('#myForm2').find('#formUpdate__lastname').val(),
-//       "age": $('#myForm2').find('#formUpdate__age').val(),
-//       "grade": $('#myForm2').find('#formUpdate__grade').val(),
-//     };
-//     firstname.value = $('tbody.first tr').attr('data-id');
-//     if (formData.firstname == "" || formData.lastname == "" || formData.age == 0 || formData.grade == 0) {
-//       $('.info').empty();
-//       $('.info').append('<div class="alert alert-danger">Please enter student data to form</div>');
-//     } else {
-//       $.ajax({
-//         type: "PUT",
-//         url: "/student/" + id,
-//         dataType: "JSON",
-//         encode: true,
-//         headers: {
-//           "Authorization": "Bearer"
-//         },
-//         data: formData,
-//       }).done(function (data) {
-//         $('.info').empty();
-//         getapi(url_students);
-//         $('input#formUpdate__firstname').val('');
-//         $('input#formUpdate__lastname').val('');
-//         $('input#formUpdate__age').val('');
-//         $('input#formUpdate__grade').val('');
-//         $('#exampleModal2').hide();
-//         $('.close').click();
-//         $('.info').addClass("success");
-//         $('.info').append('<div class="alert alert-primary">You have successfully updated a student!</div>');
-//       }).fail(function () {
-//         $('.info').append('<div class="alert alert-danger">Invalid connection to the server!!!</div>');
-//       }).catch(e => {
-//         console.log(e);
-//       });
-//     }
-//   })
-// })
-// $(document).on('click', 'btn__register', function (e) {
-//   e.preventDefault();
-//   $(document).on('click', 'btn-register', function (e) {
-//     let user = {
-//       "username": $('form-register').find('formRegister__username').val(),
-//       "password": $('form-register').find('formRegister__password').val(),
-//       "email": $('form-register').find('formRegister__email').val(),
-//       "role": $('form-register').find('formRegister__role').val(),
-//     }
-//     $.ajax({
-//       type: 'POST',
-//       url: '/register',
-//       dataType: "json",
-//       data: JSON.stringify({ user }),
-//       encode: true,
-//       headers: {
-//         "Authorization": "Bearer"
-//       },
-//       success: function () {
-
-//       },
-//       error: function () {
-
-//       }
-//     }).catch(e => {
-//       console.log(e)
-//     })
-//   })
-// })
-// let registerUser = {
-//   username: document.getElementById('fusername').value(),
-//   password: document.getElementById('fpassword').value(),
-//   email: document.getElementById('fpassword').value(),
-//   role: document.getElementById('frole').value(),
-// };
+function getID(id) {
+  currentID = id;
+}
+// POST Student
+formCreateStudent.addEventListener('submit', async (event) => {
+  try {
+    event.preventDefault();
+    let studentData = {
+      firstname: document.getElementById("fname").value,
+      lastname: document.getElementById("lname").value,
+      age: document.getElementById("fage").value,
+      grade: document.getElementById("fgrade").value
+    }
+    console.log(studentData.age)
+    let studentAge = parseInt(studentData.age);
+    let studentGrade = parseInt(studentData.grade);
+    // let token = JSON.parse(localStorage.getItem('token'));
+    if (!studentData.firstname || !studentData.lastname || studentAge == 0 || studentGrade == 0) { alert('Please enter data to form'); return; }
+    fetch(`/student`, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + localStorage.getItem('access_token')
+      },
+      body: JSON.stringify({
+        FirstName: studentData.firstname,
+        LastName: studentData.lastname,
+        Age: studentAge,
+        Grade: studentGrade
+      }),
+    }).then(async (result) => {
+      const content = await result.json();
+      if (result) {
+        getapi(url_students);
+        document.getElementById("firstname").value = "";
+        document.getElementById("lastname").value = "";
+        document.getElementById('age').value = "";
+        document.getElementById("grade").value = null;
+        // hide modal window
+        let modalWindow = document.querySelector('#exampleModal');
+        modalWindow.style.display = 'none';
+        let divBackground = document.querySelector('.modal-backdrop');
+        divBackground.remove();
+        // alert
+        console.log(content);
+      }
+    })
+  }
+  catch (err) {
+    alert("Invalid connection to the server!!!");
+    document.querySelector('.info').innerHTML += `<div class="alert alert-danger>Invalid connection to the server</div>`;
+    throw (err)
+  }
+})
+// PUT Student
+formUpdateStudent.addEventListener('submit', (event) => {
+  try {
+    event.preventDefault();
+    let studentData = {
+      firstname: document.getElementById("firstname").value,
+      lastname: document.getElementById("lastname").value,
+      age: document.getElementById("age").value,
+      grade: document.getElementById("grade").value
+    }
+    let studentAge = parseInt(studentData.age);
+    let studentGrade = parseInt(studentData.grade);
+    if (!studentData.firstname || !studentData.lastname || studentAge == 0 || studentGrade == 0) { alert('Please enter data to form'); return; }
+    fetch(`/student/` + currentID, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + localStorage.getItem('access_token')
+      },
+      body: JSON.stringify({
+        FirstName: studentData.firstname,
+        LastName: studentData.lastname,
+        Age: studentAge,
+        Grade: studentGrade
+      })
+    }).then(async (result) => {
+      const content = await result.json();
+      if (result) {
+        getapi(url_students);
+        document.getElementById("firstname").value = "";
+        document.getElementById("lastname").value = "";
+        document.getElementById('age').value = "";
+        document.getElementById("grade").value = null;
+        // hide modal window
+        let modalWindow = document.querySelector('#exampleModal2');
+        modalWindow.style.display = 'none';
+        let divBackground = document.querySelector('.modal-backdrop');
+        divBackground.remove();
+        // alert
+        console.log(content);
+      }
+    })
+  }
+  catch (err) {
+    alert("Invalid connection to the server!!!");
+    document.querySelector('.info').innerHTML += `<div class="alert alert-danger>Invalid connection to the server</div>`;
+    throw (err)
+  }
+})
+// DELETE Student
+btnDelete.addEventListener('click', (event) => {
+  event.preventDefault();
+  try {
+    fetch(`/student/` + currentID, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + localStorage.getItem('access_token')
+      },
+    }).then(async (result) => {
+      if (result) {
+        getapi(url_students);
+        // hide modal window
+        let modalWindow = document.querySelector('#exampleModal3');
+        modalWindow.style.display = 'none';
+        let divBackground = document.querySelector('.modal-backdrop');
+        divBackground.remove();
+        // alert
+      }
+    })
+  }
+  catch (err) {
+    alert("Invalid connection to the server!!!");
+    document.querySelector('.info').innerHTML += `<div class="alert alert-danger>Invalid connection to the server</div>`;
+    throw (err)
+  }
+})
+// POST UserRegister
+formRegisterUser.addEventListener('submit', async (event) => {
+  try {
+    event.preventDefault();
+    let userData = {
+      UserName: document.getElementById("fusername").value,
+      Password: document.getElementById("fpassword").value,
+      Email: document.getElementById('femail').value,
+      RoleID: document.getElementById('frole').value
+    }
+    let userRole = parseInt(userData.RoleID);
+    if (!userData.UserName || !userData.Password || !userData.Email || userRole == 0) { alert('Please enter data to form'); return; }
+    const validateEmail = (email) => {
+      return String(email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    }
+    if (!validateEmail(userData.Email)) {
+      alert('Email incorrect!');
+      return
+    }
+    fetch(`/register`, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer'
+      },
+      body: JSON.stringify({
+        "UserName": userData.UserName,
+        "Password": userData.Password,
+        "Email": userData.Email,
+        "RoleID": userRole
+      })
+    }).then(async (result) => {
+      const content = await result.json();
+      if (result) {
+        getapi(url_students);
+        document.getElementById("fusername").value = "";
+        document.getElementById("fpassword").value = "";
+        document.getElementById('femail').value = "";
+        document.getElementById('frole').value = null;
+        // hide modal window
+        let modalWindow = document.querySelector('#exampleModal4');
+        modalWindow.style.display = 'none';
+        let divBackground = document.querySelector('.modal-backdrop');
+        divBackground.remove();
+        // alert
+        console.log('Created user successfully!');
+        console.log(content);
+      } else {
+        alert('Error deleting user');
+      }
+    }).catch(e => {
+      console.log(e);
+    });
+  }
+  catch (err) {
+    alert("Invalid connection to the server!!!");
+    document.querySelector('.info').innerHTML += `<div class="alert alert-danger>Invalid connection to the server</div>`;
+    throw (err)
+  }
+})
+// POST UserLogin
+formLoginUser.addEventListener('submit', async (event) => {
+  try {
+    event.preventDefault();
+    let userData = {
+      UserName: document.getElementById("username").value,
+      Password: document.getElementById("password").value,
+      Email: document.getElementById('email').value
+    }
+    if (!userData.UserName || !userData.Password || !userData.Email) { alert('Please enter data to form'); return; }
+    fetch(`/login`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer'
+      },
+      body: JSON.stringify(userData)
+    }).then(async (result) => {
+      const content = await result.json();
+      if (result) {
+        getapi(url_students);
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById('email').value = "";
+        // hide modal window
+        let modalWindow = document.querySelector('#exampleModal5');
+        modalWindow.style.display = 'none';
+        let divBackground = document.querySelector('.modal-backdrop');
+        divBackground.remove();
+        // alert
+        console.log('User logged in successfully!');
+        localStorage.setItem("access_token", JSON.stringify(content.AccessToken));
+        localStorage.setItem("refresh_token", JSON.stringify(content.RefreshToken));
+      } else {
+        alert('Error in logging user!');
+      }
+    })
+  }
+  catch (err) {
+    alert("Invalid connection to the server!!!");
+    document.querySelector('.info').innerHTML += `<div class="alert alert-danger>Invalid connection to the server</div>`;
+    throw (err)
+  }
+})
