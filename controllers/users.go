@@ -27,8 +27,8 @@ func LoginUser(c *gin.Context) {
 	}
 
 	tokens := models.Tokens{}
-	tokens.AccessToken = CreateAccessToken(user.ID, user.RoleID, user)
-	tokens.RefreshToken = CreateRefreshToken(user.ID, user.RoleID, user)
+	tokens.AccessToken = CreateAccessToken(user.ID, user.RoleID, &user)
+	tokens.RefreshToken = CreateRefreshToken(user.ID, user.RoleID, &user)
 	c.JSON(200, tokens)
 }
 
@@ -36,6 +36,10 @@ func RegisterUser(c *gin.Context) {
 	var u models.User
 	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(400, err.Error())
+		return
+	}
+	if err := models.GetUserName(&u, u.UserName); err != nil {
+		c.JSON(400, "This account exists in database!")
 		return
 	}
 	u.Password, _ = GenerateHashPassword(u.Password)
