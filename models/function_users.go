@@ -20,21 +20,14 @@ func CheckUserEmail(User *User, Email string) error {
 	}
 	return nil
 }
-func GetUserRole(User *User, userid uint64) *uint64 {
-	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
-		return &User.RoleID
+func GetUserName(User *User, UserName string) error {
+	if err := config.DB.Table("users").Where("User_Name = ?", UserName).Find(&User).Error; err != nil {
+		return err
 	}
 	return nil
 }
-func GetUserEmail(User *User, userid uint64) *string {
-	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
-		return &User.Email
-	}
-	return nil
-}
-func GetUserId(User *User, userid uint64) *uint64 {
-	if err := config.DB.Table("users").Where("ID = ?", userid).First(&User).Error; err != nil {
-		return &User.ID
-	}
-	return nil
+func GetUserRole(userid uint64) int64 {
+	var user User
+	config.DB.Where("ID = ?", userid).Find(&user)
+	return user.RoleID
 }
