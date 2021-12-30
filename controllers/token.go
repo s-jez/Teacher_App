@@ -10,14 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateAccessToken(userid uint64, role uint64, user models.User) *models.Token {
+func CreateAccessToken(userid uint64, role int64, user *models.User) *models.Token {
 	var token = &models.Token{}
 	token.Expiration = time.Now().Add(time.Minute * 15).Unix()
 	// create the claims
 	claims := jwt.MapClaims{
 		"authorized": true,
-		"role":       models.GetUserRole(&user, userid),
-		"email":      models.GetUserEmail(&user, userid),
+		"role":       models.GetUserRole(userid),
 		"user_id":    userid,
 		"exp":        token.Expiration,
 	}
@@ -27,12 +26,12 @@ func CreateAccessToken(userid uint64, role uint64, user models.User) *models.Tok
 	return token
 }
 
-func CreateRefreshToken(userid uint64, role uint64, user models.User) *models.Token {
+func CreateRefreshToken(userid uint64, role int64, user *models.User) *models.Token {
 	var token = &models.Token{}
 	token.Expiration = time.Now().Add(time.Hour * 24 * 7).Unix()
 	// create the claims
 	claims := jwt.MapClaims{
-		"role":    models.GetUserRole(&user, userid),
+		"role":    models.GetUserRole(userid),
 		"user_id": userid,
 		"exp":     token.Expiration,
 	}
@@ -69,11 +68,12 @@ func RefreshToken(c *gin.Context) {
 	// cast claims to MapClaims
 	claims := token.Claims.(jwt.MapClaims)
 	// extract sub-claim
-	id := claims["user_id"].(uint64)
-	role := claims["role"].(uint64)
+	id := claims["user_id"].(float64)
+	role := claims["role"].(float64)
 	// create pair of tokens
 	newPairOfTokens := models.Tokens{}
-	newPairOfTokens.AccessToken = CreateAccessToken(id, role, models.User{})
-	newPairOfTokens.RefreshToken = CreateRefreshToken(id, role, models.User{})
+	newUser := models.User{}
+	newPairOfTokens.AccessToken = CreateAccessToken(uint64(id), int64(role), &newUser)
+	newPairOfTokens.RefreshToken = CreateRefreshToken(uint64(id), int64(role), &newUser)
 	c.JSON(200, newPairOfTokens)
 }
