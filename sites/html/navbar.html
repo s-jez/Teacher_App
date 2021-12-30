@@ -1,6 +1,10 @@
 {{define "navbar"}}
 <nav class="navbar navbar-light bg-light justify-content-between">
   <a class="navbar-brand">Students CRUD</a>
+  <div class="container md-2">
+    <button type="button" class="btn btn-primary" onclick="logout()">Logout</button>
+    <button type="button" class="btn btn-success" onclick="refresh()">Refresh Token</button>
+  </div>
 </nav>
 <div class="container-fluid bg-white">
   <div class="alert alert-primary" role="alert">
