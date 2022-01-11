@@ -22,7 +22,7 @@ func CreateUrlMappings() *gin.Engine {
 	r.GET("/student/:id", controllers.ReadStudentById)
 	r.POST("/student", controllers.AuthMiddleware([]int{userRoles["admin"], userRoles["dev"]}), controllers.CreateStudent)
 	r.PUT("/student/:id", controllers.AuthMiddleware([]int{userRoles["admin"], userRoles["dev"]}), controllers.UpdateStudentById)
-	r.DELETE("/student/:id", controllers.AuthMiddleware([]int{userRoles["admin"]}))
+	r.DELETE("/student/:id", controllers.AuthMiddleware([]int{userRoles["admin"]}), controllers.DeleteStudentById)
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(404, "error.html", gin.H{"title": "Page not found!"})
 	})
