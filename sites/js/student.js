@@ -45,7 +45,7 @@ formCreateStudent.addEventListener('submit', async (event) => {
   }
   let studentAge = parseInt(studentData.age);
   let studentGrade = parseInt(studentData.grade);
-  // let token = JSON.parse(localStorage.getItem('token'));
+
   if (!studentData.firstname || !studentData.lastname || studentAge == 0 || studentGrade == 0) { alert('Please enter data to form'); return; }
   fetch(`/student`, {
     method: "POST",
@@ -73,10 +73,6 @@ formCreateStudent.addEventListener('submit', async (event) => {
       modalWindow.style.display = 'none';
       let divBackground = document.querySelector('.modal-backdrop');
       divBackground.remove();
-      // alert
-      console.log(content);
-    } else {
-      alert('You not have permissions to do that action!')
     }
   }).catch((err) => {
     console.log(err)
@@ -120,10 +116,6 @@ formUpdateStudent.addEventListener('submit', (event) => {
       modalWindow.style.display = 'none';
       let divBackground = document.querySelector('.modal-backdrop');
       divBackground.remove();
-      // alert
-      console.log(content);
-    } else {
-      alert('You not have permissions to do that action!')
     }
   }).catch((err) => {
     console.log(err)
@@ -147,11 +139,9 @@ btnDelete.addEventListener('click', (event) => {
       modalWindow.style.display = 'none';
       let divBackground = document.querySelector('.modal-backdrop');
       divBackground.remove();
-      // alert
-    } else {
-      alert('You not have permissions to do that action!')
     }
-  }).catch((err) => {
+  })
+  .catch((err) => {
     console.log(err)
   });
 })
@@ -177,11 +167,9 @@ function refresh() {
       const content = await result.json();
       if (result) {
         console.log(content)
-        localStorage.setItem("access_token", JSON.stringify(content.AccessToken));
-        localStorage.setItem("refresh_token", JSON.stringify(content.RefreshToken));
+        localStorage.setItem("access_token", JSON.stringify(content.AccessToken.Token).slice(1, -1));
+        localStorage.setItem("refresh_token", JSON.stringify(content.RefreshToken.Token).slice(1, -1));
         alert('Successfully refreshed your accesstoken and refreshtoken!')
-      } else {
-        alert("error!");
       }
     })
   } else {
