@@ -1,7 +1,7 @@
 const formRegisterUser = document.getElementById('formRegisterUser');
 const formLoginUser = document.getElementById('formLoginUser');
 
-// POST UserRegister
+// POST
 formRegisterUser.addEventListener('submit', async (event) => {
     event.preventDefault();
     let userData = {
@@ -47,7 +47,7 @@ formRegisterUser.addEventListener('submit', async (event) => {
             modalWindow.style.display = 'none';
             let divBackground = document.querySelector('.modal-backdrop');
             divBackground.remove();
-            // alert
+
             alert('Created user successfully! \nNow login to your account!');
             console.log(content);
         } else {
@@ -58,7 +58,7 @@ formRegisterUser.addEventListener('submit', async (event) => {
         console.log(e);
     });
 })
-// POST UserLogin
+// POST
 formLoginUser.addEventListener('submit', async (event) => {
     event.preventDefault();
     let userData = {
@@ -87,13 +87,11 @@ formLoginUser.addEventListener('submit', async (event) => {
             let divBackground = document.querySelector('.modal-backdrop');
             divBackground.remove();
             // alert
-            alert('User logged in successfully!');
+            alert('User logged in successfully! \nWelcome to Student App');
             location.href = '/logged';
-            localStorage.setItem("access_token", JSON.stringify(content.AccessToken.Token));
-            localStorage.setItem("refresh_token", JSON.stringify(content.RefreshToken.Token));
-        } else {
-            alert('Error in logging user!');
-            return
+            console.log(content.AccessToken);
+            localStorage.setItem("access_token", JSON.stringify(content.AccessToken.Token).slice(1, -1));
+            localStorage.setItem("refresh_token", JSON.stringify(content.RefreshToken.Token).slice(1, -1));
         }
     }).catch((err) => {
         console.log(err)
