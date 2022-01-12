@@ -63,6 +63,12 @@ formCreateStudent.addEventListener('submit', async (event) => {
   }).then(async (result) => {
     const content = await result.json();
     if (result) {
+      if (result.status == 403) {
+        alert('Error! You not have permissions to CREATE student!');
+      }
+      if (result.status == 201) {
+        alert('Success! Student has been created!');
+      }
       getapi(url_students);
       document.getElementById("fname").value = "";
       document.getElementById("lname").value = "";
@@ -73,9 +79,11 @@ formCreateStudent.addEventListener('submit', async (event) => {
       modalWindow.style.display = 'none';
       let divBackground = document.querySelector('.modal-backdrop');
       divBackground.remove();
+
+      console.log(content);
     }
-  }).catch((err) => {
-    console.log(err)
+  }).catch(err => {
+    throw new Error(err.ToString());
   });
 })
 // PUT Student
@@ -106,6 +114,12 @@ formUpdateStudent.addEventListener('submit', (event) => {
   }).then(async (result) => {
     const content = await result.json();
     if (result) {
+      if (result.status == 403) {
+        alert('Error! You not have permissions to UPDATE student!');
+      }
+      if (result.status == 201) {
+        alert('Success! Student has been updated!');
+      }
       getapi(url_students);
       document.getElementById("firstname").value = "";
       document.getElementById("lastname").value = "";
@@ -116,9 +130,11 @@ formUpdateStudent.addEventListener('submit', (event) => {
       modalWindow.style.display = 'none';
       let divBackground = document.querySelector('.modal-backdrop');
       divBackground.remove();
+
+      console.log(content);
     }
-  }).catch((err) => {
-    console.log(err)
+  }).catch(err => {
+    throw new Error(err.ToString());
   });
 })
 // DELETE Student
@@ -130,9 +146,15 @@ btnDelete.addEventListener('click', (event) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-    },
+    }
   }).then(async (result) => {
     if (result) {
+      if (result.status == 403) {
+        alert('Error! You not have permissions to DELETE student!');
+      }
+      if (result.status == 204) {
+        alert('Success! Student has been deleted!');
+      }
       getapi(url_students);
       // hide modal window
       let modalWindow = document.querySelector('#exampleModal3');
@@ -141,9 +163,9 @@ btnDelete.addEventListener('click', (event) => {
       divBackground.remove();
     }
   })
-  .catch((err) => {
-    console.log(err)
-  });
+    .catch(err => {
+      throw new Error(err.ToString());
+    });
 })
 function logout() {
   if (confirm("Are you sure to logout from your account?")) {
