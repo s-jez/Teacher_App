@@ -38,6 +38,9 @@ formRegisterUser.addEventListener('submit', async (event) => {
     }).then(async (result) => {
         const content = await result.json();
         if (result) {
+            if (result.status == 200) {
+                alert('Created user successfully! \nNow login to your account!');
+            }
             document.getElementById("fusername").value = "";
             document.getElementById("fpassword").value = "";
             document.getElementById('femail').value = "";
@@ -48,11 +51,7 @@ formRegisterUser.addEventListener('submit', async (event) => {
             let divBackground = document.querySelector('.modal-backdrop');
             divBackground.remove();
 
-            alert('Created user successfully! \nNow login to your account!');
             console.log(content);
-        } else {
-            alert('Error deleting user');
-            return
         }
     }).catch(e => {
         console.log(e);
@@ -78,6 +77,9 @@ formLoginUser.addEventListener('submit', async (event) => {
     }).then(async (result) => {
         const content = await result.json();
         if (result) {
+            if (result.status == 200) {
+                alert('User logged in successfully! \nWelcome to Student App');
+            }
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
             document.getElementById('email').value = "";
@@ -86,8 +88,6 @@ formLoginUser.addEventListener('submit', async (event) => {
             modalWindow.style.display = 'none';
             let divBackground = document.querySelector('.modal-backdrop');
             divBackground.remove();
-            // alert
-            alert('User logged in successfully! \nWelcome to Student App');
             location.href = '/logged';
             console.log(content.AccessToken);
             localStorage.setItem("access_token", JSON.stringify(content.AccessToken.Token).slice(1, -1));
