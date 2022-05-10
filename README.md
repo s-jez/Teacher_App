@@ -1,3 +1,3 @@
-# Teacher_App
-CRUD App created in GoLang.
+# Teacher App
+Simple CRUD API written in GO.
 
